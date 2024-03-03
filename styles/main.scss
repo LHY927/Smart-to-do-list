@@ -59,22 +59,32 @@ main {
     display: flex;
     justify-content: space-between;
 
+    .item_icon {
+      .material-symbols-outlined {
+        font-size: xxx-large;
+      }
+    }
+
+    .item_title {
+      font-size: larger;
+      font-weight: bold;
+    }
+
+    .item_description {
+      color: #6D6D6D;
+
+      .material-symbols-outlined {
+        font-size: small;
+      }
+    }
+
     .item_content {
       display: flex;
       flex-flow: column;
 
-      .item_title {
-        font-size: larger;
-        font-weight: bold;
-      }
-
       .item_countdown {
         font-weight: bold;
         color: #66A034;
-      }
-
-      .item_description {
-        color: #6D6D6D;
       }
     }
 
@@ -85,8 +95,40 @@ main {
   }
 }
 
+.small_button {
+  border-radius: 40%;
+  color: white;
+}
+
+.small_button_confirm {
+  background: #426B1F;
+}
+
+.small_button_cancel {
+  background: #6B1F1F;
+}
+
+.add_new_todo {
+  display: flex;
+  justify-content: center;
+}
+
+.large_button {
+  width: 50%;
+  background: #426B1F;
+  border-radius: 20%;
+}
+
+::backdrop {
+  background-image: linear-gradient(45deg,
+      magenta,
+      rebeccapurple,
+      dodgerblue,
+      green);
+  opacity: 0.75;
+}
+
 .material-symbols-outlined {
-  font-size: xxx-large;
   font-variation-settings:
     'FILL' 0,
     'wght' 400,
