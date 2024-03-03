@@ -18,17 +18,22 @@ body {
 header {
   display: flex;
   width: 100%;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 1%;
 
   .logo {
     background: #66A034;
     padding: 0.3%;
     border-radius: 15%;
+    margin-left: 3%;
 
     span {
       color: white;
     }
+  }
+
+  #user_welcome {
+    margin-right: 3%;
   }
 }
 
@@ -57,6 +62,20 @@ main {
     .item_content {
       display: flex;
       flex-flow: column;
+
+      .item_title {
+        font-size: larger;
+        font-weight: bold;
+      }
+
+      .item_countdown {
+        font-weight: bold;
+        color: #66A034;
+      }
+
+      .item_description {
+        color: #6D6D6D;
+      }
     }
 
     .item_control {
@@ -64,4 +83,13 @@ main {
       flex-flow: column;
     }
   }
+}
+
+.material-symbols-outlined {
+  font-size: xxx-large;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
 }
