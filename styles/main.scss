@@ -116,7 +116,37 @@ main {
 .large_button {
   width: 50%;
   background: #426B1F;
+  color: white;
   border-radius: 20%;
+}
+
+dialog {
+  .dialog_header {
+    font-size: small;
+  }
+
+  .dialog_icons {
+    font-size: xx-large;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 3%;
+  }
+
+  .dialog_item {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3%;
+
+    .material-symbols-outlined {
+      font-size: small;
+    }
+  }
+
+  .dialog_buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 3%;
+  }
 }
 
 ::backdrop {
