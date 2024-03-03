@@ -50,6 +50,10 @@ main {
     }
   }
 
+  .completed_items {
+    opacity: 0.5;
+  }
+
   .item {
     background: #FAFAF5;
     border: 1px solid #E6E6E6;

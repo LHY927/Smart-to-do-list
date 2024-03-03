@@ -26,11 +26,75 @@
         <span id="user_welcome">Welcome, USERNAME</span>
     </header>
     <main>
-        <div class="title">
+        <div class="title" id="ongoing_title">
             <span class="title_name">TODO</span>
-            <span class="title_count">3 items</span>
+            <span class="title_count">1 items</span>
         </div>
         <div class="ongoing_items">
+            <div class="item" style="display: none;">
+                <!-- used as the template for copy -->
+                <div class="item_icon">
+                    <span class="material-symbols-outlined">
+                        live_tv
+                    </span>
+                </div>
+                <div class="item_content">
+                    <span class="item_title">To Watch Item 1</span>
+                    <span class="item_countdown">10 days left</span>
+                    <span class="item_description">Item description.</span>
+                </div>
+                <div class="item_control">
+                    <span class="item_title">Due on 10th, March</span>
+                    <div class="item_description">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <span> San Juan Capistrano, CA</span>
+                    </div>
+                    <div class="item_buttons">
+                        <button class="small_button small_button_confirm" onclick="clickCompleteOnList(event)">
+                            <span>Complete</span>
+                        </button>
+                        <button class="small_button small_button_cancel" onclick="clickRemoveOnList(event)">
+                            <span>Remove</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="item_icon">
+                    <span class="material-symbols-outlined">
+                        live_tv
+                    </span>
+                </div>
+                <div class="item_content">
+                    <span class="item_title">To Watch Item 1</span>
+                    <span class="item_countdown">10 days left</span>
+                    <span class="item_description">Item description.</span>
+                </div>
+                <div class="item_control">
+                    <span class="item_title">Due on 10th, March</span>
+                    <div class="item_description">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <span> San Juan Capistrano, CA</span>
+                    </div>
+                    <div class="item_buttons">
+                        <button class="small_button small_button_confirm" onclick="clickCompleteOnList(event)">
+                            <span>Complete</span>
+                        </button>
+                        <button class="small_button small_button_cancel" onclick="clickRemoveOnList(event)">
+                            <span>Remove</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="add_new_todo">
+            <button class="large_button" id="add_new_todo_btn">Add new TODO</span>
+        </div>
+        <div class="title" id="completed_title">
+            <span class="title_name">Completed</span>
+            <span class="title_count">1 items</span>
+        </div>
+        <div class="completed_items">
             <div class="item">
                 <div class="item_icon">
                     <span class="material-symbols-outlined">
@@ -52,15 +116,12 @@
                         <button class="small_button small_button_confirm">
                             <span>Complete</span>
                         </button>
-                        <button class="small_button small_button_cancel">
+                        <button class="small_button small_button_cancel" onclick="clickRemoveOnList(event)">
                             <span>Remove</span>
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="add_new_todo">
-            <button class="large_button" id="add_new_todo_btn">Add new TODO</span>
         </div>
 
         <dialog>
