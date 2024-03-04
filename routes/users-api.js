@@ -5,14 +5,22 @@
  * See: https://expressjs.com/en/guide/using-middleware.html#middleware.router
  */
 
-const express = require('express');
-const router  = express.Router();
-const userQueries = require('../db/queries/users');
+const express = require("express");
+const router = express.Router();
+const userQueries = require("../db/queries/users");
+const { get } = require("lodash");
 
-router.get('/', (req, res) => {
-  userQueries.getUsers()
+router.get('/:id', (req, res) => {
+  const userId = req.session.userId;
+
+  if (!userId) {
+    return res.send({ error: "no user" });
+  }
+
+  userQueries.getUsersById(userId)
     .then(users => {
       res.json({ users });
+      console.log("getUsersById", users);
     })
     .catch(err => {
       res
@@ -20,5 +28,26 @@ router.get('/', (req, res) => {
         .json({ error: err.message });
     });
 });
+
+router.post('/:id', (req, res) => {
+  const userId = req.session.userId;
+  const { name, email, password } = req.body;
+
+  if (!userId) {
+    return res.send({ error: "no user" });
+  }
+
+  userQueries.updateUser(userId, name, email, password)
+    .then(users => {
+      res.json({ users });
+      console.log("updateUser", users);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: err.message });
+    });
+});
+
 
 module.exports = router;
