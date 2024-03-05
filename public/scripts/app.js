@@ -45,6 +45,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
     
     for(const div of newItem.children){
         console.log(div);
+        //Handle the display of different components in the item
         if(div.className.includes("item_icon")){
             switch(type){
                 //For type, 0 for watch icon, 1 for eat icon, 2 for read icon and 3 for buy icon
@@ -68,6 +69,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
                 }else if(child.className.includes("item_countdown")){
                     const target = new Date(date);
                     const today = new Date();
+                    //Calculate the days to target date
                     const dateDiff = Math.round((target - today) / (1000 * 3600 * 24))
                     if(today.getDate() == target.getDate() && today.getMonth() == target.getMonth() && today.getFullYear() == target.getFullYear()){
                         child.innerText = "Due today";
@@ -97,6 +99,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
     form.reset(); 
 }
 
+//If user clicked the complete button, move the item to completed section
 function clickCompleteOnList(event){
     event.target.parentNode.style.display = "none";
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
@@ -107,6 +110,7 @@ function clickCompleteOnList(event){
     item.parentNode.removeChild(item);
 }
 
+//If user clicked the complete button, remove the item
 function clickRemoveOnList(event){
     console.log(event)
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
