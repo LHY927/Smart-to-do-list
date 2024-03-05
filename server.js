@@ -5,9 +5,18 @@ require('dotenv').config();
 const sassMiddleware = require('./lib/sass-middleware');
 const express = require('express');
 const morgan = require('morgan');
-
+const ENV = process.env.ENV || "development";
 const PORT = process.env.PORT || 8080;
 const app = express();
+const bodyParser = require("body-parser");
+const cookieSession = require('cookie-session');
+const methodOverride = require("method-override");
+
+// PG database client/connection setup
+const { Pool } = require('pg');
+const dbParams = require('./lib/db.js');
+const db = new Pool(dbParams);
+db.connect();
 
 app.set('view engine', 'ejs');
 
@@ -15,7 +24,7 @@ app.set('view engine', 'ejs');
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
 app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   '/styles',
   sassMiddleware({
@@ -26,18 +35,30 @@ app.use(
 );
 app.use(express.static('public'));
 
+app.use(cookieSession({
+  name: 'session',
+  keys:['key1','key2'],
+  maxAge: 24 * 60 * 60 * 1000
+  }));
+
+app.use(methodOverride('_method'));
+
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
+const usersRoutes = require("./routes/users");
+const taskRoutes = require("./routes/toDoItems-api");
+const loginRoutes = require("./routes/login");
+const logoutRoutes = require("./routes/logout");
 const userApiRoutes = require('./routes/users-api');
-const widgetApiRoutes = require('./routes/widgets-api');
-const usersRoutes = require('./routes/users');
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 // Note: Endpoints that return data (eg. JSON) usually start with `/api`
-app.use('/api/users', userApiRoutes);
-app.use('/api/widgets', widgetApiRoutes);
-app.use('/users', usersRoutes);
+app.use("/users", usersRoutes(db));
+app.use("/toDoItems-api", taskRoutes(db));
+app.use("/login", loginRoutes(db));
+app.use("/logout", logoutRoutes);
+app.use("/users-api", userApiRoutes(db));
 // Note: mount other resources here, using the same pattern above
 
 // Home page
@@ -49,6 +70,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Rey');
-  console.log(`Example app listening on port ${PORT}`);
+  console.log(`Smart-to-do-list app listening on port ${PORT}`);
 });
