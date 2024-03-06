@@ -1,8 +1,19 @@
 const db = require("../connection");
 
-const gettoDoItemsById = (id) => {
+const getToDoItemById = (userId, id) => {
   return db
-    .query("SELECT * FROM to_do_items WHERE id = $1;", [id])
+    .query("SELECT * FROM to_do_items WHERE user_id = $1 AND id = $2;", [userId, id])
+    .then((data) => {
+      return data.rows[0];
+    })
+    .catch((err) => {
+      console.log("err", err.message);
+    });
+};
+
+const getToDoItemsByUserId = (id) => {
+  return db
+    .query("SELECT * FROM to_do_items WHERE user_id = $1;", [id])
     .then((data) => {
       return data.rows;
     })
@@ -11,17 +22,19 @@ const gettoDoItemsById = (id) => {
     });
 };
 
-const addToDoItem = (toDoItem) => {
+const addToDoItem = (toDoItem, userId) => {
   return db
     .query(
-      "INSERT INTO to_do_items (user_id, title, category_id, description, due_date, completed) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;",
+      "INSERT INTO to_do_items (user_id, title, category_id, description, due_date, completed, url, duration) VALUES ($1, $2, $3, $4, $5, $6, $7 ,$8) RETURNING *;",
       [
-        toDoItem.user_id,
+        userId,
         toDoItem.title,
         toDoItem.category_id,
         toDoItem.description,
         toDoItem.due_date,
         toDoItem.completed,
+        toDoItem.url,
+        toDoItem.duration,
       ]
     )
     .then((data) => {
@@ -34,7 +47,10 @@ const addToDoItem = (toDoItem) => {
 
 const deleteToDoItem = (toDoItem) => {
   return db
-    .query("DELETE FROM to_do_items WHERE id = $1 AND user_id = $2;", [toDoItem.id, toDoItem.user_id])
+    .query("DELETE FROM to_do_items WHERE id = $1 AND user_id = $2;", [
+      toDoItem.id,
+      toDoItem.user_id,
+    ])
     .then((data) => {
       return data.rows[0];
     })
@@ -43,10 +59,10 @@ const deleteToDoItem = (toDoItem) => {
     });
 };
 
-const updateToDoItem = (toDoItem) => {
+const updateToDoItem = (toDoItem, userId, toDoItemId) => {
   return db
     .query(
-      "UPDATE to_do_items SET url = $1, title = $2, category_id = $3, description = $4, due_date = $5, completed = $6 WHERE id = $7 AND user_id = $8 RETURNING *;",
+      "UPDATE to_do_items SET url = $1, title = $2, category_id = $3, description = $4, due_date = $5, completed = $6, duration = $7 WHERE id = $8 AND user_id = $9 RETURNING *;",
       [
         toDoItem.url,
         toDoItem.title,
@@ -54,15 +70,23 @@ const updateToDoItem = (toDoItem) => {
         toDoItem.description,
         toDoItem.due_date,
         toDoItem.completed,
-        toDoItem.id,
-        toDoItem.user_id
+        toDoItem.duration,
+        toDoItemId,
+        userId,
       ]
-    ).then((data) => {
+    )
+    .then((data) => {
       return data.rows[0];
-    }
-    ).catch((err) => {
+    })
+    .catch((err) => {
       console.log("err", err.message);
     });
 };
 
-module.exports = { gettoDoItemsById, addToDoItem, deleteToDoItem, updateToDoItem};
+module.exports = {
+  getToDoItemById,
+  getToDoItemsByUserId,
+  addToDoItem,
+  deleteToDoItem,
+  updateToDoItem,
+};

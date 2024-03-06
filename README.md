@@ -43,4 +43,13 @@ The following steps are only for _one_ of the group members to perform.
 - NPM 5.x or above
 - PG 6.x
 - cookie-session
-- Express
+- Chalk: ^2.4.2,
+- Cookie-parser": ^1.4.6,
+- Cookie-session": ^2.1.0,
+- Dotenv: 2^.0.0",
+- Ejs: ^3.1.9,
+- Express: ^4.17.1,
+- Express-session: ^1.18.0,
+- Morgan: 1.9.1,
+- Pg: 8.5.0,
+- Sass: 1.35.1

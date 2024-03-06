@@ -9,18 +9,66 @@ const express = require('express');
 const router  = express.Router();
 const toDoItemsQueries = require("../db/queries/toDoItems");
 
-router.get('/:id', (req, res) => {
-  console.log("req.user_id", req.user_id);
+//get all toDoItems from user
+router.get('/', (req, res) => {
+  console.log("req.user_id", req.session.userId);
   const userId = req.session.userId;
+
+  if (!userId) {
+    return res.send({ error: "no users" });
+  }
+
+  toDoItemsQueries.getToDoItemsByUserId(userId)
+    .then(toDoItems => {
+      res.json({ toDoItems });
+      console.log("item", toDoItems);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: err.message });
+    });
+});
+
+router.get('/:id', (req, res) => {
+  console.log("req.user_id", req.session.userId);
+  const userId = req.session.userId;
+  const toDoItemId = req.params.id;
+  console.log("toDoItemId", req.params.id);
+
+  if (!userId) {
+    return res.send({ error: "no users" });
+  }
+
+  if (!toDoItemId) {
+    return res.send({ error: "no todo items" });
+  }
+
+  toDoItemsQueries.getToDoItemById(userId, toDoItemId)
+    .then(toDoItems => {
+      res.json({ toDoItems });
+      console.log("Items", toDoItems);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ error: err.message });
+    });
+});
+
+router.post('/new', (req, res) => {
+  const userId = req.session.userId || 3;
+  const addToDoItem = req.body;
+  console.log("addToDoItem before", addToDoItem);
 
   if (!userId) {
     return res.send({ error: "no todo items" });
   }
 
-  toDoItemsQueries.gettoDoItemsById(userId)
+  toDoItemsQueries.addToDoItem(addToDoItem, userId)
     .then(toDoItems => {
       res.json({ toDoItems });
-      console.log("getToDoItemsByUserId", toDoItems);
+      console.log("added ToDoItem", toDoItems);
     })
     .catch(err => {
       res
@@ -30,14 +78,16 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/:id', (req, res) => {
-  const userId = req.session.userId;
+  const userId = req.session.userId || 3;
   const addToDoItem = req.body;
+  const toDoItemId = req.params.id;
+  console.log("toDoItemId: ", toDoItemId);
 
   if (!userId) {
     return res.send({ error: "no todo items" });
   }
 
-  toDoItemsQueries.updateToDoItem(addToDoItem)
+  toDoItemsQueries.updateToDoItem(addToDoItem, userId, toDoItemId)
     .then(toDoItems => {
       res.json({ toDoItems });
       console.log("addToDoItem", toDoItems);
@@ -49,9 +99,14 @@ router.post('/:id', (req, res) => {
     });
 });
 
-router.post('/:id/delete', (req, res) => {
+router.get('/:id/delete', (req, res) => {
   const userId = req.session.userId;
-  const deleteToDoItem = req.body;
+  console.log("delete", userId);
+  // const deleteToDoItem = req.body;
+  const deleteToDoItem = {
+    id: req.params.id,
+    user_id: userId
+  };
 
   if (!userId) {
     return res.send({ error: "no todo items" });
@@ -60,7 +115,7 @@ router.post('/:id/delete', (req, res) => {
   toDoItemsQueries.deleteToDoItem(deleteToDoItem)
     .then(toDoItems => {
       res.json({ toDoItems });
-      console.log("deleteToDoItem", toDoItems);
+      console.log("deleteToDoItem success");
     })
     .catch(err => {
       res
