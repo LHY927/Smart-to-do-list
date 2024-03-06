@@ -8,6 +8,13 @@ const morgan = require('morgan');
 
 const PORT = process.env.PORT || 8080;
 const app = express();
+const cookieSession = require("cookie-session");
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["key1"],
+  })
+);
 
 //app.set('view engine', 'ejs');
 
@@ -16,6 +23,7 @@ const app = express();
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(
   '/styles',
   sassMiddleware({
@@ -29,15 +37,17 @@ app.use(express.static('public'));
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
 const userApiRoutes = require('./routes/users-api');
-const widgetApiRoutes = require('./routes/widgets-api');
-const usersRoutes = require('./routes/users');
+const toDoItemsApiRoutes = require('./routes/toDoItems-api');
+const loginRoutes = require('./routes/login');
+const logoutRoutes = require('./routes/logout');
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 // Note: Endpoints that return data (eg. JSON) usually start with `/api`
 app.use('/api/users', userApiRoutes);
-app.use('/api/widgets', widgetApiRoutes);
-app.use('/users', usersRoutes);
+app.use('/api/todoitems', toDoItemsApiRoutes);
+app.use('/login', loginRoutes);
+app.use('/logout', logoutRoutes);
 // Note: mount other resources here, using the same pattern above
 
 // Home page
@@ -49,6 +59,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Rey');
   console.log(`Example app listening on port ${PORT}`);
 });
