@@ -13,11 +13,19 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^2.4.2",
+<<<<<<< HEAD
+=======
+    "cookie-parser": "^1.4.6",
+>>>>>>> f589d91e03375c586ebf01fa0490bea74e08c8d5
     "cookie-session": "^2.1.0",
     "dotenv": "^2.0.0",
-    "ejs": "^2.6.2",
+    "ejs": "^3.1.9",
     "express": "^4.17.1",
+<<<<<<< HEAD
     "method-override": "^3.0.0",
+=======
+    "express-session": "^1.18.0",
+>>>>>>> f589d91e03375c586ebf01fa0490bea74e08c8d5
     "morgan": "^1.9.1",
     "pg": "^8.5.0",
     "sass": "^1.35.1"
