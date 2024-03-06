@@ -9,6 +9,7 @@ const express = require('express');
 const router  = express.Router();
 const toDoItemsQueries = require("../db/queries/toDoItems");
 
+// GET /api/todoitems
 //get all toDoItems from user
 router.get('/', (req, res) => {
   console.log("req.user_id", req.session.userId);
@@ -30,9 +31,11 @@ router.get('/', (req, res) => {
     });
 });
 
+// GET /api/todoitems/:id
+// get a specific toDoItem from user
 router.get('/:id', (req, res) => {
   console.log("req.user_id", req.session.userId);
-  const userId = req.session.userId;
+  const userId = req.session.userId || 3;
   const toDoItemId = req.params.id;
   console.log("toDoItemId", req.params.id);
 
@@ -52,10 +55,12 @@ router.get('/:id', (req, res) => {
     .catch(err => {
       res
         .status(500)
-        .json({ error: err.message });
+        .json({ error: "this user do not have this todo item" });
     });
 });
 
+// POST /api/todoitems/new
+//add a new toDoItem to user
 router.post('/new', (req, res) => {
   const userId = req.session.userId || 3;
   const addToDoItem = req.body;
@@ -76,7 +81,8 @@ router.post('/new', (req, res) => {
         .json({ error: err.message });
     });
 });
-
+//POST /api/todoitems/:id
+//update a toDoItem from user
 router.post('/:id', (req, res) => {
   const userId = req.session.userId || 3;
   const addToDoItem = req.body;
@@ -99,6 +105,8 @@ router.post('/:id', (req, res) => {
     });
 });
 
+//GET /api/todoitems/:id/delete
+//delete a toDoItem from user
 router.get('/:id/delete', (req, res) => {
   const userId = req.session.userId;
   console.log("delete", userId);
@@ -107,6 +115,7 @@ router.get('/:id/delete', (req, res) => {
     id: req.params.id,
     user_id: userId
   };
+  console.log("deleteToDoItem", deleteToDoItem);
 
   if (!userId) {
     return res.send({ error: "no todo items" });
