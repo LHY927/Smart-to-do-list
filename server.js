@@ -8,6 +8,13 @@ const morgan = require('morgan');
 
 const PORT = process.env.PORT || 8080;
 const app = express();
+const cookieSession = require("cookie-session");
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["key1"],
+  })
+);
 
 app.set('view engine', 'ejs');
 
@@ -30,7 +37,7 @@ app.use(express.static('public'));
 // Note: Feel free to replace the example routes below with your own
 const userApiRoutes = require('./routes/users-api');
 const toDoItemsApiRoutes = require('./routes/toDoItems-api');
-// const usersRoutes = require('./routes/users');
+const usersRoutes = require('./routes/users');
 const loginRoutes = require('./routes/login');
 const logoutRoutes = require('./routes/logout');
 
@@ -39,7 +46,7 @@ const logoutRoutes = require('./routes/logout');
 // Note: Endpoints that return data (eg. JSON) usually start with `/api`
 app.use('/api/users', userApiRoutes);
 app.use('/api/todoitems', toDoItemsApiRoutes);
-// app.use('/users', usersRoutes);
+app.use('/users', usersRoutes);
 app.use('/login', loginRoutes);
 app.use('/logout', logoutRoutes);
 // Note: mount other resources here, using the same pattern above

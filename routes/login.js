@@ -1,16 +1,12 @@
-const express = require('express');
-const router  = express.Router();
+const express = require("express");
+const router = express.Router();
 
-router.get('/login/:id', (req, res) => {
-  // using encrypted cookies
-  req.session.user_id = req.params.id;
-
-  // or using plain-text cookies
-  res.cookie('user_id', req.params.id);
-  console.log("user_id", req.params.id);
+router.get("/:id", (req, res) => {
+  req.session.userId = req.params.id;
+  console.log("req.session.userId", req.session.userId);
   // send the user somewhere
-  res.redirect('/');
-});
+  res.redirect("/");
 
+});
 
 module.exports = router;

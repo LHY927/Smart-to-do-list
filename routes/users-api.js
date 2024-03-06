@@ -8,7 +8,6 @@
 const express = require("express");
 const router = express.Router();
 const userQueries = require("../db/queries/users");
-const { get } = require("lodash");
 
 router.get('/:id', (req, res) => {
   const userId = req.session.userId;
@@ -17,7 +16,7 @@ router.get('/:id', (req, res) => {
     return res.send({ error: "no user" });
   }
 
-  userQueries.getUsersById(userId)
+  userQueries.getUserById(userId)
     .then(users => {
       res.json({ users });
       console.log("getUsersById", users);
