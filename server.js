@@ -16,7 +16,7 @@ app.use(
   })
 );
 
-app.set('view engine', 'ejs');
+//app.set('view engine', 'ejs');
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -61,5 +61,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
+  console.log('Rey');
   console.log(`Example app listening on port ${PORT}`);
 });
