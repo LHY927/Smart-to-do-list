@@ -12,12 +12,14 @@ const completedItemsList = [];
 
 // "Show the dialog" button opens the dialog modally
 showButton.addEventListener("click", () => {
-  dialog.showModal();
+    //Hide the icon for recognized types for adding new item as the types haven't been recognized yet.
+    document.querySelector(".dialog_icons").style.display = "none";
+    dialog.showModal();
 });
 
 // "Close" button closes the dialog
 closeButton.addEventListener("click", () => {
-  dialog.close();
+    dialog.close();
 });
 
 // "Confirm" button closes the dialog
@@ -28,16 +30,16 @@ form.addEventListener("submit", (event) => {
     const dateInput = document.querySelector("#dialog_date_input").value;
     const durationInput = document.querySelector("#dialog_duration_input").value;
     const locationInput = document.querySelector("#dialog_location_input").value;
+
     if(confirmButton.submissionType == undefined || confirmButton.submissionType == 0){
         //If the dialog is for adding item
         //TODO: Use the recognized type
         addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList)
     }else{
         //If the dialog is for edit item
-        console.log(confirmButton.submissionType - 1);
-        console.log(itemsList[confirmButton.submissionType - 1]);
         //TODO: Use the recognized type
-        editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType - 1])
+        editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType - 1]);
+        confirmButton.submissionType = 0;
     }
     dialog.close();
   });
@@ -51,6 +53,12 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
 
     newItem.addEventListener('click', function(e) {
         dialog.showModal();
+        document.querySelector(".dialog_icons").style.display = "flex";
+        //Reset the icons font color
+        for(const icon of document.querySelector(".dialog_icons").children){
+            icon.style.color = "black";
+        }
+        document.querySelector(".dialog_icons").children[type].style.color = "#66A034";
         document.querySelector("#dialog_title_input").value = name;
         document.querySelector("#dialog_description_input").value = description;
         document.querySelector("#dialog_date_input").value = date;
@@ -69,18 +77,23 @@ function editTODOItem(type, name, description, date, duration, location, targetI
 
     targetItem.addEventListener('click', function(e) {
         dialog.showModal();
+        document.querySelector(".dialog_icons").style.display = "flex";
+        //Reset the icons font color
+        for(const icon of document.querySelector(".dialog_icons").children){
+            icon.style.color = "black";
+        }
+        document.querySelector(".dialog_icons").children[type].style.color = "#66A034";
         document.querySelector("#dialog_title_input").value = name;
         document.querySelector("#dialog_description_input").value = description;
         document.querySelector("#dialog_date_input").value = date;
         document.querySelector("#dialog_duration_input").value = duration;
         document.querySelector("#dialog_location_input").value = location;
-        //Set the type of the button to -1 to notify the eventlistener of dialog submit.
-        confirmButton.submissionType = targetList.length;
       });
 
     form.reset(); 
 }
 
+//Function for editing the display information of items.
 function editItemTexts(item, type, name, description, date, duration, location){
     for(const div of item.children){
         console.log(div);
