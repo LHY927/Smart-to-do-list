@@ -6,9 +6,9 @@ const completedItems = document.querySelector(".completed_items");
 const showButton = document.querySelector("#add_new_todo_btn");
 const closeButton = document.querySelector("#dialog_cancel_btn");
 const confirmButton = document.querySelector("#dialog_confirm_btn");
-const itemsList = [];
-const ongoingItemsList = [];
-const completedItemsList = [];
+let itemsList = [];
+let toDoItems;
+const url = "http://localhost:8080/";
 
 // "Show the dialog" button opens the dialog modally
 showButton.addEventListener("click", () => {
@@ -39,19 +39,35 @@ form.addEventListener("submit", (event) => {
     }else{
         //If the dialog is for edit item
         //TODO: Use the recognized type
-        editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType - 1]);
+        editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
         confirmButton.submissionType = 0;
     }
     dialog.close();
   });
 
+function initialize(){
+    $.ajax(url + "api/todoitems", {
+        method: "GET",
+        contentType: "application/json",
+      })
+      .done(function (response) {
+        // This function is called when the request is successful
+        console.log(response);
+        toDoItems = response["toDoItems"];
+        for(const item of toDoItems){
+            addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, ongoingItems, itemsList);
+        }
+      })
+}
+
 function addTODOItem(type, name, description, date, duration, location, targetNode, targetList) {
+    
     const newItem = targetNode.children[0].cloneNode(true);
     newItem.removeAttribute("style");
     targetList.push(newItem);
     form.reset()
 
-    editItemTexts(newItem, type, name, description, date, duration, location, targetNode);
+    editItemTexts(newItem, type, name, description, date, duration, location);
 
     newItem.addEventListener('click', function(e) {
         console.log(e.target);
@@ -64,7 +80,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
         for(const icon of document.querySelector(".dialog_icons").children){
             icon.style.color = "black";
         }
-        document.querySelector(".dialog_icons").children[type].style.color = "#66A034";
+        document.querySelector(".dialog_icons").children[type - 1].style.color = "#66A034";
         document.querySelector("#dialog_title_input").value = name;
         document.querySelector("#dialog_description_input").value = description;
         document.querySelector("#dialog_date_input").value = date;
@@ -72,9 +88,35 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
         document.querySelector("#dialog_location_input").value = location;
         //Set the type of the button to -1 to notify the eventlistener of dialog submit.
         confirmButton.submissionType = targetList.length;
+
+        var data = {
+            url: 'test.url',
+            duration: duration,
+            title: name,
+            category_id: 4,
+            description: description,
+            due_date: new Date(date),
+            completed: false
+        };
+          
+          // Make the AJAX POST request
+          $.ajax(url + "api/todoitems/new", {
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data), // Convert the JavaScript object to a JSON string
+          })
+          .done(function (response) {
+            // This function is called when the request is successful
+            console.log(response);
+          })
+          .fail(function (jqXHR, textStatus, errorThrown) {
+            // This function is called when the request fails
+          console.log("Request failed: " + textStatus + ", " + errorThrown);
+        });
       });
 
     targetNode.appendChild(newItem);
+    
     form.reset(); 
 }
 
@@ -150,7 +192,7 @@ function editItemTexts(item, type, name, description, date, duration, location){
                 console.log(child)
                 if(child.className.includes("item_title")){
                     console.log("got");
-                    child.innerText = "Due on " + date;
+                    child.innerText = "Due on " + date.slice(0, 10);
                 }else if(child.className.includes("item_description")){
                     child.children[1].innerText = location;
                 }
@@ -175,3 +217,5 @@ function clickRemoveOnList(event){
     item.parentNode.removeChild(item);
     itemsList.slice(itemsList.indexOf(item), 1);
 }
+
+initialize();

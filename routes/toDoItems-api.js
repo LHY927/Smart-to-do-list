@@ -13,7 +13,7 @@ const toDoItemsQueries = require("../db/queries/toDoItems");
 //get all toDoItems from user
 router.get('/', (req, res) => {
   console.log("req.user_id", req.session.userId);
-  const userId = req.session.userId;
+  const userId = req.session.userId || 3;
 
   if (!userId) {
     return res.send({ error: "no users" });
