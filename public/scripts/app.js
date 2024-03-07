@@ -6,6 +6,7 @@ const completedItems = document.querySelector(".completed_items");
 const showButton = document.querySelector("#add_new_todo_btn");
 const closeButton = document.querySelector("#dialog_cancel_btn");
 const confirmButton = document.querySelector("#dialog_confirm_btn");
+const itemsList = [];
 const ongoingItemsList = [];
 const completedItemsList = [];
 
@@ -27,23 +28,61 @@ form.addEventListener("submit", (event) => {
     const dateInput = document.querySelector("#dialog_date_input").value;
     const durationInput = document.querySelector("#dialog_duration_input").value;
     const locationInput = document.querySelector("#dialog_location_input").value;
-    addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, ongoingItemsList)
+    if(confirmButton.submissionType == undefined || confirmButton.submissionType == 0){
+        //If the dialog is for adding item
+        //TODO: Use the recognized type
+        addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList)
+    }else{
+        //If the dialog is for edit item
+        console.log(confirmButton.submissionType - 1);
+        console.log(itemsList[confirmButton.submissionType - 1]);
+        //TODO: Use the recognized type
+        editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType - 1])
+    }
     dialog.close();
   });
 
 function addTODOItem(type, name, description, date, duration, location, targetNode, targetList) {
-    console.log("Add TODO Item for");
-    console.log(type);
-    console.log(name);
-    console.log(description);
-    console.log(date);
-    console.log(duration);
-    console.log(location);
     const newItem = targetNode.children[0].cloneNode(true);
     newItem.removeAttribute("style");
     targetList.push(newItem);
-    
-    for(const div of newItem.children){
+
+    editItemTexts(newItem, type, name, description, date, duration, location, targetNode);
+
+    newItem.addEventListener('click', function(e) {
+        dialog.showModal();
+        document.querySelector("#dialog_title_input").value = name;
+        document.querySelector("#dialog_description_input").value = description;
+        document.querySelector("#dialog_date_input").value = date;
+        document.querySelector("#dialog_duration_input").value = duration;
+        document.querySelector("#dialog_location_input").value = location;
+        //Set the type of the button to -1 to notify the eventlistener of dialog submit.
+        confirmButton.submissionType = targetList.length;
+      });
+
+    targetNode.appendChild(newItem);
+    form.reset(); 
+}
+
+function editTODOItem(type, name, description, date, duration, location, targetItem) {
+    editItemTexts(targetItem, type, name, description, date, duration, location);
+
+    targetItem.addEventListener('click', function(e) {
+        dialog.showModal();
+        document.querySelector("#dialog_title_input").value = name;
+        document.querySelector("#dialog_description_input").value = description;
+        document.querySelector("#dialog_date_input").value = date;
+        document.querySelector("#dialog_duration_input").value = duration;
+        document.querySelector("#dialog_location_input").value = location;
+        //Set the type of the button to -1 to notify the eventlistener of dialog submit.
+        confirmButton.submissionType = targetList.length;
+      });
+
+    form.reset(); 
+}
+
+function editItemTexts(item, type, name, description, date, duration, location){
+    for(const div of item.children){
         console.log(div);
         //Handle the display of different components in the item
         if(div.className.includes("item_icon")){
@@ -95,8 +134,6 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
             }
         }
     }
-    targetNode.appendChild(newItem);
-    form.reset(); 
 }
 
 //If user clicked the complete button, move the item to completed section
@@ -104,9 +141,7 @@ function clickCompleteOnList(event){
     event.target.parentNode.style.display = "none";
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
     const newItem = item.cloneNode(true);
-    completedItemsList.push(newItem);
     completedItems.appendChild(newItem);
-    ongoingItemsList.splice(ongoingItemsList.indexOf(item), 1);
     item.parentNode.removeChild(item);
 }
 
@@ -114,10 +149,5 @@ function clickCompleteOnList(event){
 function clickRemoveOnList(event){
     console.log(event)
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
-    if(ongoingItemsList.indexOf(item) > 0){
-        ongoingItemsList.splice(ongoingItemsList.indexOf(item), 1);
-    }else{
-        completedItemsList.splice(completedItemsList.indexOf(item), 1);
-    }
     item.parentNode.removeChild(item);
 }
