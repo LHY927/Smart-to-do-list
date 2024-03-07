@@ -19,6 +19,7 @@ showButton.addEventListener("click", () => {
 
 // "Close" button closes the dialog
 closeButton.addEventListener("click", () => {
+    confirmButton.submissionType = 0
     dialog.close();
 });
 
@@ -48,10 +49,15 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
     const newItem = targetNode.children[0].cloneNode(true);
     newItem.removeAttribute("style");
     targetList.push(newItem);
+    form.reset()
 
     editItemTexts(newItem, type, name, description, date, duration, location, targetNode);
 
     newItem.addEventListener('click', function(e) {
+        console.log(e.target);
+        if (e.target.innerText == "Complete" || e.target.innerText == "Remove" || e.target.className.includes("small_button")){
+            return;
+        }
         dialog.showModal();
         document.querySelector(".dialog_icons").style.display = "flex";
         //Reset the icons font color
@@ -76,6 +82,10 @@ function editTODOItem(type, name, description, date, duration, location, targetI
     editItemTexts(targetItem, type, name, description, date, duration, location);
 
     targetItem.addEventListener('click', function(e) {
+        console.log(e.target);
+        if (e.target.className.includes('small_button')){
+            return;
+        }
         dialog.showModal();
         document.querySelector(".dialog_icons").style.display = "flex";
         //Reset the icons font color
@@ -163,4 +173,5 @@ function clickRemoveOnList(event){
     console.log(event)
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
     item.parentNode.removeChild(item);
+    itemsList.slice(itemsList.indexOf(item), 1);
 }
