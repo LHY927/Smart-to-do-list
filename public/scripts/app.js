@@ -12,8 +12,6 @@ const url = "http://localhost:8080/";
 
 // "Show the dialog" button opens the dialog modally
 showButton.addEventListener("click", () => {
-    //Hide the icon for recognized types for adding new item as the types haven't been recognized yet.
-    document.querySelector(".dialog_icons").style.display = "none";
     dialog.showModal();
 });
 
