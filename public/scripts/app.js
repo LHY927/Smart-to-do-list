@@ -35,7 +35,32 @@ form.addEventListener("submit", (event) => {
     if(confirmButton.submissionType == undefined || confirmButton.submissionType == 0){
         //If the dialog is for adding item
         //TODO: Use the recognized type
-        addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList)
+        var data = {
+            url: locationInput,
+            duration: durationInput,
+            title: titleInput,
+            category_id: 4,
+            description: descriptionInput,
+            due_date: new Date(dateInput),
+            completed: false
+        };
+          
+          // Make the AJAX POST request
+          $.ajax(url + "api/todoitems/new", {
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data), // Convert the JavaScript object to a JSON string
+          })
+          .done(function (response) {
+            // This function is called when the request is successful
+            console.log(response);
+            toDoItems[toDoItems.length] = response["toDoItems"];
+            addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
+          })
+          .fail(function (jqXHR, textStatus, errorThrown) {
+            // This function is called when the request fails
+          console.log("Request failed: " + textStatus + ", " + errorThrown);
+        });
     }else{
         //If the dialog is for edit item
         //TODO: Use the recognized type
@@ -55,14 +80,15 @@ function initialize(){
         console.log(response);
         toDoItems = response["toDoItems"];
         for(const item of toDoItems){
-            addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, ongoingItems, itemsList);
+            addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, ongoingItems, itemsList, item.id);
         }
       })
 }
 
-function addTODOItem(type, name, description, date, duration, location, targetNode, targetList) {
+function addTODOItem(type, name, description, date, duration, location, targetNode, targetList, todoIndex) {
     
     const newItem = targetNode.children[0].cloneNode(true);
+    newItem.index = todoIndex;
     newItem.removeAttribute("style");
     targetList.push(newItem);
     form.reset()
@@ -80,39 +106,17 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
         for(const icon of document.querySelector(".dialog_icons").children){
             icon.style.color = "black";
         }
+
+        let targetDate = new Date(date);
+
         document.querySelector(".dialog_icons").children[type - 1].style.color = "#66A034";
         document.querySelector("#dialog_title_input").value = name;
         document.querySelector("#dialog_description_input").value = description;
-        document.querySelector("#dialog_date_input").value = date;
+        document.querySelector("#dialog_date_input").value = targetDate.toISOString().split('T')[0];
         document.querySelector("#dialog_duration_input").value = duration;
         document.querySelector("#dialog_location_input").value = location;
         //Set the type of the button to -1 to notify the eventlistener of dialog submit.
         confirmButton.submissionType = targetList.length;
-
-        var data = {
-            url: 'test.url',
-            duration: duration,
-            title: name,
-            category_id: 4,
-            description: description,
-            due_date: new Date(date),
-            completed: false
-        };
-          
-          // Make the AJAX POST request
-          $.ajax(url + "api/todoitems/new", {
-            method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(data), // Convert the JavaScript object to a JSON string
-          })
-          .done(function (response) {
-            // This function is called when the request is successful
-            console.log(response);
-          })
-          .fail(function (jqXHR, textStatus, errorThrown) {
-            // This function is called when the request fails
-          console.log("Request failed: " + textStatus + ", " + errorThrown);
-        });
       });
 
     targetNode.appendChild(newItem);
@@ -191,8 +195,9 @@ function editItemTexts(item, type, name, description, date, duration, location){
             for(const child of div.children){
                 console.log(child)
                 if(child.className.includes("item_title")){
-                    console.log("got");
-                    child.innerText = "Due on " + date.slice(0, 10);
+                    let targetDate = new Date(date)
+
+                    child.innerText = "Due on " + targetDate.toISOString().split('T')[0];
                 }else if(child.className.includes("item_description")){
                     child.children[1].innerText = location;
                 }
