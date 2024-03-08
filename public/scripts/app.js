@@ -54,7 +54,7 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
+            addTODOItem(2, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
             toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -83,7 +83,7 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
+            editTODOItem(2, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
             toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -106,9 +106,9 @@ function initialize(){
         for(const item of response["toDoItems"]){
             toDoItems[item.id] = item;
             if(item.completed){
-                addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, completedItems, itemsList, item.id);
+                addTODOItem(item.category_id - 1, item.title, item.description, item.due_date, item.duration, item.url, completedItems, itemsList, item.id);
             }else{
-                addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, ongoingItems, itemsList, item.id);
+                addTODOItem(item.category_id - 1, item.title, item.description, item.due_date, item.duration, item.url, ongoingItems, itemsList, item.id);
             }
         }
       })
@@ -139,7 +139,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
 
         let targetDate = new Date(date);
 
-        document.querySelector(".dialog_icons").children[type - 1].style.color = "#66A034";
+        document.querySelector(".dialog_icons").children[type].style.color = "#66A034";
         document.querySelector("#dialog_title_input").value = name;
         document.querySelector("#dialog_description_input").value = description;
         document.querySelector("#dialog_date_input").value = targetDate.toISOString().split('T')[0];
