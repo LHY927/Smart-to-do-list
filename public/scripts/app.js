@@ -111,7 +111,15 @@ function initialize(){
       .done(function (response) {
         // This function is called when the request is successful
         console.log(response);
-        document.querySelector("#user_welcome").innerText = "Welcome, " + response["toDoItems"][0].user_id;
+        $.ajax(url + "api/users/" + response["toDoItems"][0].user_id, {
+            method: "GET",
+            contentType: "application/json",
+          })
+          .done(function (users) {
+            // This function is called when the request is successful
+            console.log(users["users"]);
+            document.querySelector("#user_welcome").innerText = "Welcome, " + users["users"].name;
+          })
         for(const item of response["toDoItems"]){
             toDoItems[item.id] = item;
             if(item.completed){
