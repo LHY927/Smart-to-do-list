@@ -31,7 +31,7 @@ form.addEventListener("submit", (event) => {
     const dateInput = document.querySelector("#dialog_date_input").value;
     const durationInput = document.querySelector("#dialog_duration_input").value;
     const locationInput = document.querySelector("#dialog_location_input").value;
-    let categoryId = 4;
+    let categoryId = 3;
     for(let index = 0; index < document.querySelector(".dialog_icons").children.length; index++){
         if(document.querySelector(".dialog_icons").children[index].style.color == "#66A034" ||
           document.querySelector(".dialog_icons").children[index].style.color == "rgb(102, 160, 52)"){
@@ -47,7 +47,7 @@ form.addEventListener("submit", (event) => {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: categoryId,
+            category_id: categoryId + 1,
             description: descriptionInput,
             due_date: new Date(dateInput),
             completed: false
@@ -62,7 +62,7 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            addTODOItem(2, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
+            addTODOItem(categoryId, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
             toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -70,15 +70,16 @@ form.addEventListener("submit", (event) => {
           console.log("Request failed: " + textStatus + ", " + errorThrown);
         });
     }else{
+        const targetItem = itemsList[confirmButton.submissionType - 1];
         //If the dialog is for edit item
         var data = {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: categoryId,
+            category_id: categoryId + 1,
             description: descriptionInput,
             due_date: new Date(dateInput),
-            completed: false
+            completed: toDoItems[targetItem.index].completed
         };
 
         // Make the AJAX POST request for edit existing item
@@ -90,7 +91,7 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            editTODOItem(2, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
+            editTODOItem(categoryId, titleInput, descriptionInput, dateInput, durationInput, locationInput, targetItem);
             toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
