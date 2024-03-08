@@ -66,6 +66,7 @@ main .item .item_description .material-symbols-outlined {
 main .item .item_content {
   display: flex;
   flex-flow: column;
+  align-items: center;
 }
 main .item .item_content .item_countdown {
   font-weight: bold;
@@ -77,6 +78,7 @@ main .item .item_content .item_countdown_past {
 main .item .item_control {
   display: flex;
   flex-flow: column;
+  align-items: center;
 }
 
 .small_button {

@@ -12,8 +12,6 @@ const url = "http://localhost:8080/";
 
 // "Show the dialog" button opens the dialog modally
 showButton.addEventListener("click", () => {
-    //Hide the icon for recognized types for adding new item as the types haven't been recognized yet.
-    document.querySelector(".dialog_icons").style.display = "none";
     dialog.showModal();
 });
 
@@ -31,15 +29,25 @@ form.addEventListener("submit", (event) => {
     const dateInput = document.querySelector("#dialog_date_input").value;
     const durationInput = document.querySelector("#dialog_duration_input").value;
     const locationInput = document.querySelector("#dialog_location_input").value;
+    //CategoryId stands for the currently selected category. 0 Stands for to Watch, 1 stands for to Eat, 2 stands for to Read and 3 stands for to Buy
+    let categoryId = 3;
+    for(let index = 0; index < document.querySelector(".dialog_icons").children.length; index++){
+        //Searching for the selected category by font color.
+        if(document.querySelector(".dialog_icons").children[index].style.color == "#66A034" ||
+          document.querySelector(".dialog_icons").children[index].style.color == "rgb(102, 160, 52)"){
+            categoryId = index;
+            console.log("got categoryId " + index);
+            break;
+        }
+    }
 
     if(confirmButton.submissionType == undefined || confirmButton.submissionType == 0){
         //If the dialog is for adding item
-        //TODO: Use the recognized type
         var data = {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: 4,
+            category_id: categoryId + 1, //As the sequence in db starts from 1, add 1 to the categoryId
             description: descriptionInput,
             due_date: new Date(dateInput),
             completed: false
@@ -54,7 +62,7 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            addTODOItem(2, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
+            addTODOItem(categoryId, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
             toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -62,16 +70,16 @@ form.addEventListener("submit", (event) => {
           console.log("Request failed: " + textStatus + ", " + errorThrown);
         });
     }else{
+        const targetItem = itemsList[confirmButton.submissionType - 1];
         //If the dialog is for edit item
-        //TODO: Use the recognized type
         var data = {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: 4,
+            category_id: categoryId + 1, //As the sequence in db starts from 1, add 1 to the categoryId
             description: descriptionInput,
             due_date: new Date(dateInput),
-            completed: false
+            completed: toDoItems[targetItem.index].completed
         };
 
         // Make the AJAX POST request for edit existing item
@@ -83,7 +91,7 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            editTODOItem(2, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
+            editTODOItem(categoryId, titleInput, descriptionInput, dateInput, durationInput, locationInput, targetItem);
             toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -103,6 +111,15 @@ function initialize(){
       .done(function (response) {
         // This function is called when the request is successful
         console.log(response);
+        $.ajax(url + "api/users/" + response["toDoItems"][0].user_id, {
+            method: "GET",
+            contentType: "application/json",
+          })
+          .done(function (users) {
+            // This function is called when the request is successful
+            console.log(users["users"]);
+            document.querySelector("#user_welcome").innerText = "Welcome, " + users["users"].name;
+          })
         for(const item of response["toDoItems"]){
             toDoItems[item.id] = item;
             if(item.completed){
@@ -185,7 +202,6 @@ function editTODOItem(type, name, description, date, duration, location, targetI
 //Function for editing the display information of items.
 function editItemTexts(item, type, name, description, date, duration, location){
     for(const div of item.children){
-        console.log(div);
         //Handle the display of different components in the item
         if(div.className.includes("item_icon")){
             switch(type){
@@ -226,7 +242,6 @@ function editItemTexts(item, type, name, description, date, duration, location){
             }
         }else if(div.className.includes("item_control")){
             for(const child of div.children){
-                console.log(child)
                 if(child.className.includes("item_title")){
                     let targetDate = new Date(date)
 
@@ -288,6 +303,35 @@ function clickRemoveOnList(event){
 
     item.parentNode.removeChild(item);
     itemsList.slice(itemsList.indexOf(item), 1);
+}
+
+
+function clickWatch(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
+}
+    
+function clickEat(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
+}
+    
+function clickRead(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
+}
+    
+function clickShop(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
 }
 
 initialize();
