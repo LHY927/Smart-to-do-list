@@ -45,7 +45,7 @@ form.addEventListener("submit", (event) => {
             completed: false
         };
           
-          // Make the AJAX POST request
+          // Make the AJAX POST request for add new item
           $.ajax(url + "api/todoitems/new", {
             method: "POST",
             contentType: "application/json",
@@ -54,7 +54,6 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            toDoItems[toDoItems.length] = response["toDoItems"];
             addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -74,7 +73,7 @@ form.addEventListener("submit", (event) => {
             completed: false
         };
 
-        // Make the AJAX POST request
+        // Make the AJAX POST request for edit existing item
         $.ajax(url + "api/todoitems/" + confirmButton.itemIndex, {
             method: "POST",
             contentType: "application/json",
@@ -83,7 +82,6 @@ form.addEventListener("submit", (event) => {
           .done(function (response) {
             // This function is called when the request is successful
             console.log(response);
-            toDoItems[confirmButton.itemIndex] = response["toDoItems"];
             editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -248,6 +246,20 @@ function clickCompleteOnList(event){
 function clickRemoveOnList(event){
     console.log(event)
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
+
+    // Make the AJAX POST request for edit existing item
+    $.ajax(url + "api/todoitems/" + item.index + "/delete", {
+        method: "GET",
+      })
+      .done(function (response) {
+        // This function is called when the request is successful
+        console.log(response);
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        // This function is called when the request fails
+      console.log("Request failed: " + textStatus + ", " + errorThrown);
+    });
+
     item.parentNode.removeChild(item);
     itemsList.slice(itemsList.indexOf(item), 1);
 }
