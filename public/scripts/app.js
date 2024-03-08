@@ -8,7 +8,6 @@ const closeButton = document.querySelector("#dialog_cancel_btn");
 const confirmButton = document.querySelector("#dialog_confirm_btn");
 const itemsList = [];
 const toDoItems = {};
-let currCategory = -1;
 const url = "http://localhost:8080/";
 
 // "Show the dialog" button opens the dialog modally
@@ -22,7 +21,6 @@ showButton.addEventListener("click", () => {
 closeButton.addEventListener("click", () => {
     confirmButton.submissionType = 0
     dialog.close();
-    currCategory = -1;
 });
 
 // "Confirm" button closes the dialog
@@ -34,8 +32,13 @@ form.addEventListener("submit", (event) => {
     const durationInput = document.querySelector("#dialog_duration_input").value;
     const locationInput = document.querySelector("#dialog_location_input").value;
     let categoryId = 4;
-    if(currCategory >= 0){
-        categoryId = currCategory + 1;
+    for(let index = 0; index < document.querySelector(".dialog_icons").children.length; index++){
+        if(document.querySelector(".dialog_icons").children[index].style.color == "#66A034" ||
+          document.querySelector(".dialog_icons").children[index].style.color == "rgb(102, 160, 52)"){
+            categoryId = index;
+            console.log("got categoryId " + index);
+            break;
+        }
     }
 
     if(confirmButton.submissionType == undefined || confirmButton.submissionType == 0){
@@ -97,7 +100,6 @@ form.addEventListener("submit", (event) => {
         confirmButton.submissionType = 0;
     }
     dialog.close();
-    currCategory = -1;
   });
 
 function initialize(){
@@ -190,7 +192,6 @@ function editTODOItem(type, name, description, date, duration, location, targetI
 //Function for editing the display information of items.
 function editItemTexts(item, type, name, description, date, duration, location){
     for(const div of item.children){
-        console.log(div);
         //Handle the display of different components in the item
         if(div.className.includes("item_icon")){
             switch(type){
@@ -231,7 +232,6 @@ function editItemTexts(item, type, name, description, date, duration, location){
             }
         }else if(div.className.includes("item_control")){
             for(const child of div.children){
-                console.log(child)
                 if(child.className.includes("item_title")){
                     let targetDate = new Date(date)
 
@@ -301,7 +301,6 @@ function clickWatch(event) {
         icon.style.color = "black";
     }
     event.target.style.color = "#66A034";
-    currCategory = 0;
 }
     
 function clickEat(event) {
@@ -309,7 +308,6 @@ function clickEat(event) {
         icon.style.color = "black";
     }
     event.target.style.color = "#66A034";
-    currCategory = 1;
 }
     
 function clickRead(event) {
@@ -317,7 +315,6 @@ function clickRead(event) {
         icon.style.color = "black";
     }
     event.target.style.color = "#66A034";
-    currCategory = 2;
 }
     
 function clickShop(event) {
@@ -325,7 +322,6 @@ function clickShop(event) {
         icon.style.color = "black";
     }
     event.target.style.color = "#66A034";
-    currCategory = 3;
 }
 
 initialize();
