@@ -64,7 +64,32 @@ form.addEventListener("submit", (event) => {
     }else{
         //If the dialog is for edit item
         //TODO: Use the recognized type
-        editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
+        var data = {
+            url: locationInput,
+            duration: durationInput,
+            title: titleInput,
+            category_id: 4,
+            description: descriptionInput,
+            due_date: new Date(dateInput),
+            completed: false
+        };
+
+        // Make the AJAX POST request
+        $.ajax(url + "api/todoitems/" + confirmButton.itemIndex, {
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data), // Convert the JavaScript object to a JSON string
+          })
+          .done(function (response) {
+            // This function is called when the request is successful
+            console.log(response);
+            toDoItems[confirmButton.itemIndex] = response["toDoItems"];
+            editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
+          })
+          .fail(function (jqXHR, textStatus, errorThrown) {
+            // This function is called when the request fails
+          console.log("Request failed: " + textStatus + ", " + errorThrown);
+        });
         confirmButton.submissionType = 0;
     }
     dialog.close();
@@ -91,6 +116,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
     newItem.index = todoIndex;
     newItem.removeAttribute("style");
     targetList.push(newItem);
+    const currLength = targetList.length;
     form.reset()
 
     editItemTexts(newItem, type, name, description, date, duration, location);
@@ -116,7 +142,8 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
         document.querySelector("#dialog_duration_input").value = duration;
         document.querySelector("#dialog_location_input").value = location;
         //Set the type of the button to -1 to notify the eventlistener of dialog submit.
-        confirmButton.submissionType = targetList.length;
+        confirmButton.submissionType = currLength;
+        confirmButton.itemIndex = e.target.index;
       });
 
     targetNode.appendChild(newItem);
@@ -144,6 +171,8 @@ function editTODOItem(type, name, description, date, duration, location, targetI
         document.querySelector("#dialog_date_input").value = date;
         document.querySelector("#dialog_duration_input").value = duration;
         document.querySelector("#dialog_location_input").value = location;
+
+        confirmButton.itemIndex = e.target.index;
       });
 
     form.reset(); 
