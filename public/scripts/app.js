@@ -6,8 +6,8 @@ const completedItems = document.querySelector(".completed_items");
 const showButton = document.querySelector("#add_new_todo_btn");
 const closeButton = document.querySelector("#dialog_cancel_btn");
 const confirmButton = document.querySelector("#dialog_confirm_btn");
-let itemsList = [];
-let toDoItems;
+const itemsList = [];
+const toDoItems = {};
 const url = "http://localhost:8080/";
 
 // "Show the dialog" button opens the dialog modally
@@ -55,6 +55,7 @@ form.addEventListener("submit", (event) => {
             // This function is called when the request is successful
             console.log(response);
             addTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, ongoingItems, itemsList, response["toDoItems"].id);
+            toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
             // This function is called when the request fails
@@ -83,6 +84,7 @@ form.addEventListener("submit", (event) => {
             // This function is called when the request is successful
             console.log(response);
             editTODOItem(0, titleInput, descriptionInput, dateInput, durationInput, locationInput, itemsList[confirmButton.submissionType]);
+            toDoItems[response["toDoItems"].id] = response["toDoItems"];
           })
           .fail(function (jqXHR, textStatus, errorThrown) {
             // This function is called when the request fails
@@ -101,9 +103,13 @@ function initialize(){
       .done(function (response) {
         // This function is called when the request is successful
         console.log(response);
-        toDoItems = response["toDoItems"];
-        for(const item of toDoItems){
-            addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, ongoingItems, itemsList, item.id);
+        for(const item of response["toDoItems"]){
+            toDoItems[item.id] = item;
+            if(item.completed){
+                addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, completedItems, itemsList, item.id);
+            }else{
+                addTODOItem(item.category_id, item.title, item.description, item.due_date, item.duration, item.url, ongoingItems, itemsList, item.id);
+            }
         }
       })
 }
@@ -237,6 +243,25 @@ function editItemTexts(item, type, name, description, date, duration, location){
 function clickCompleteOnList(event){
     event.target.parentNode.style.display = "none";
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
+
+    var data = toDoItems[item.index];
+    data.completed = true;
+
+    // Make the AJAX POST request for edit existing item
+    $.ajax(url + "api/todoitems/" + item.index, {
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data), // Convert the JavaScript object to a JSON string
+      })
+      .done(function (response) {
+        // This function is called when the request is successful
+        console.log(response);
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        // This function is called when the request fails
+      console.log("Request failed: " + textStatus + ", " + errorThrown);
+    });
+
     const newItem = item.cloneNode(true);
     completedItems.appendChild(newItem);
     item.parentNode.removeChild(item);
@@ -254,6 +279,7 @@ function clickRemoveOnList(event){
       .done(function (response) {
         // This function is called when the request is successful
         console.log(response);
+        delete toDoItems[item.index];
       })
       .fail(function (jqXHR, textStatus, errorThrown) {
         // This function is called when the request fails

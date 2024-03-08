@@ -66,51 +66,76 @@
             <span class="title_name">Completed</span>
         </div>
         <div class="completed_items">
-        </div>
-
-        <dialog>
-            <div class="dialog_header">TODO Details</div>
-            <div class="dialog_icons material-symbols-outlined">
-                <span class="dialog_watch_icon">live_tv</span>
-                <span class="dialog_eat_icon">restaurant</span>
-                <span class="dialog_read_icon">auto_stories</span>
-                <span class="dialog_buy_icon">shopping_bag</span>
-            </div>
-            <form action="" method="get" id="TODO_form">
-                <div class="dialog_item dialog_title">
-                    <label for="title">Title: </label>
-                    <input type="text" name="title" class="dialog_input" id="dialog_title_input"
-                        placeholder="Title of TODO" required />
+            <div class="item" style="display: none;">
+                <!-- used as the template for copy -->
+                <div class="item_icon">
+                    <span class="material-symbols-outlined">
+                        live_tv
+                    </span>
                 </div>
-                <div class="dialog_item dialog_description">
-                    <label for="description">Description: </label>
-                    <textarea name="description" class="dialog_input" id="dialog_description_input"
-                        placeholder="Description of TODO" required></textarea>
+                <div class="item_content">
+                    <span class="item_title">To Watch Item 1</span>
+                    <span class="item_countdown">10 days left</span>
+                    <span class="item_description">Item description.</span>
                 </div>
-                <div class="dialog_item dialog_date">
-                    <label for="date">Date: </label>
-                    <input type="date" name="date" class="dialog_input" id="dialog_date_input" required />
-                </div>
-                <div class="dialog_item dialog_duration">
-                    <label for="duration">Duration:
-                        <input type="number" name="duration" class="dialog_input" id="dialog_duration_input" required />
-                        <span>min</span>
-                    </label>
-                </div>
-                <div class="dialog_item dialog_location">
-                    <label for="location">Location:
+                <div class="item_control">
+                    <span class="item_title">Due on 10th, March</span>
+                    <div class="item_description">
                         <span class="material-symbols-outlined">location_on</span>
-                        <input type="text" name="location" id="dialog_location_input" required />
-                    </label>
+                        <span> San Juan Capistrano, CA</span>
+                    </div>
+                    <div class="item_buttons">
+                        <button class="small_button small_button_cancel" onclick="clickRemoveOnList(event)">
+                            <span>Remove</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="dialog_buttons">
-                    <input submissionType="0" type="submit" value="Confirm" id="dialog_confirm_btn"
-                        class="small_button small_button_confirm" />
-                    <input type="button" value="Cancel" id="dialog_cancel_btn" class="small_button small_button_cancel"
-                        autofocus></button>
+            </div>
+
+            <dialog>
+                <div class="dialog_header">TODO Details</div>
+                <div class="dialog_icons material-symbols-outlined">
+                    <span class="dialog_watch_icon">live_tv</span>
+                    <span class="dialog_eat_icon">restaurant</span>
+                    <span class="dialog_read_icon">auto_stories</span>
+                    <span class="dialog_buy_icon">shopping_bag</span>
                 </div>
-            </form>
-        </dialog>
+                <form action="" method="get" id="TODO_form">
+                    <div class="dialog_item dialog_title">
+                        <label for="title">Title: </label>
+                        <input type="text" name="title" class="dialog_input" id="dialog_title_input"
+                            placeholder="Title of TODO" required />
+                    </div>
+                    <div class="dialog_item dialog_description">
+                        <label for="description">Description: </label>
+                        <textarea name="description" class="dialog_input" id="dialog_description_input"
+                            placeholder="Description of TODO" required></textarea>
+                    </div>
+                    <div class="dialog_item dialog_date">
+                        <label for="date">Date: </label>
+                        <input type="date" name="date" class="dialog_input" id="dialog_date_input" required />
+                    </div>
+                    <div class="dialog_item dialog_duration">
+                        <label for="duration">Duration:
+                            <input type="number" name="duration" class="dialog_input" id="dialog_duration_input"
+                                required />
+                            <span>min</span>
+                        </label>
+                    </div>
+                    <div class="dialog_item dialog_location">
+                        <label for="location">Location:
+                            <span class="material-symbols-outlined">location_on</span>
+                            <input type="text" name="location" id="dialog_location_input" required />
+                        </label>
+                    </div>
+                    <div class="dialog_buttons">
+                        <input submissionType="0" type="submit" value="Confirm" id="dialog_confirm_btn"
+                            class="small_button small_button_confirm" />
+                        <input type="button" value="Cancel" id="dialog_cancel_btn"
+                            class="small_button small_button_cancel" autofocus></button>
+                    </div>
+                </form>
+            </dialog>
     </main>
 </body>
 
