@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const { getUserByEmail } = require('../helpers/database');
 
 router.get("/:id", (req, res) => {
   req.session.userId = req.params.id;
@@ -33,5 +31,4 @@ router.post('/', async (req, res) => {
       console.error('login error', err);
     });
 });
-return router;
 module.exports = router;

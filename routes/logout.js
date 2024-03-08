@@ -7,5 +7,4 @@ router.get("/", (req, res) => {
   req.session.userId = null;
   res.redirect("/");
 });
-return router;
 module.exports = router;

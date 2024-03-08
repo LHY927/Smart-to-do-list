@@ -8,7 +8,6 @@
 const express = require('express');
 const router  = express.Router();
 const toDoItemsQueries = require("../db/queries/toDoItems");
-const { getToDoItemById, getUserById } = require('../helpers/database');
 const { categorizeToDoItem } = require('../helpers/categorizeToDoList');
 
 
@@ -73,10 +72,15 @@ router.get('/:id', (req, res) => {
 
 // POST /api/todoitems/new
 //add a new toDoItem to user
-router.post('/new', (req, res) => {
+router.post('/new', async (req, res) => {
   const userId = req.session.userId || 3;
   const addToDoItem = req.body;
   console.log("addToDoItem before", addToDoItem);
+
+  // categorized new toDoItem
+  const newToDoItem = await categorizeToDoItem(input);
+  console.log("api results:",newToDoItem);
+  res.json(newToDoItem);
 
   if (!userId) {
     return res.send({ error: "no todo items" });

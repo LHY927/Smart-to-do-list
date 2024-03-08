@@ -42,7 +42,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
     const newItem = targetNode.children[0].cloneNode(true);
     newItem.removeAttribute("style");
     targetList.push(newItem);
-    
+
     for(const div of newItem.children){
         console.log(div);
         if(div.className.includes("item_icon")){
@@ -94,7 +94,7 @@ function addTODOItem(type, name, description, date, duration, location, targetNo
         }
     }
     targetNode.appendChild(newItem);
-    form.reset(); 
+    form.reset();
 }
 
 function clickCompleteOnList(event){
@@ -117,3 +117,4 @@ function clickRemoveOnList(event){
     }
     item.parentNode.removeChild(item);
 }
+module.exports = router;
