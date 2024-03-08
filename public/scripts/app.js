@@ -31,8 +31,10 @@ form.addEventListener("submit", (event) => {
     const dateInput = document.querySelector("#dialog_date_input").value;
     const durationInput = document.querySelector("#dialog_duration_input").value;
     const locationInput = document.querySelector("#dialog_location_input").value;
+    //CategoryId stands for the currently selected category. 0 Stands for to Watch, 1 stands for to Eat, 2 stands for to Read and 3 stands for to Buy
     let categoryId = 3;
     for(let index = 0; index < document.querySelector(".dialog_icons").children.length; index++){
+        //Searching for the selected category by font color.
         if(document.querySelector(".dialog_icons").children[index].style.color == "#66A034" ||
           document.querySelector(".dialog_icons").children[index].style.color == "rgb(102, 160, 52)"){
             categoryId = index;
@@ -47,7 +49,7 @@ form.addEventListener("submit", (event) => {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: categoryId + 1,
+            category_id: categoryId + 1, //As the sequence in db starts from 1, add 1 to the categoryId
             description: descriptionInput,
             due_date: new Date(dateInput),
             completed: false
@@ -76,7 +78,7 @@ form.addEventListener("submit", (event) => {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: categoryId + 1,
+            category_id: categoryId + 1, //As the sequence in db starts from 1, add 1 to the categoryId
             description: descriptionInput,
             due_date: new Date(dateInput),
             completed: toDoItems[targetItem.index].completed
@@ -111,6 +113,7 @@ function initialize(){
       .done(function (response) {
         // This function is called when the request is successful
         console.log(response);
+        document.querySelector("#user_welcome").innerText = "Welcome, " + response["toDoItems"][0].user_id;
         for(const item of response["toDoItems"]){
             toDoItems[item.id] = item;
             if(item.completed){
