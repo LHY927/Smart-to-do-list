@@ -63,7 +63,24 @@ const getUserByEmail = async (email) => {
 
 }
 
-const getToDoListById = async (id) => {
+const getUserById = async (id) => {
+  const queryString = `
+    SELECT *
+    FROM users
+    WHERE id = $1
+  `;
+  const queryParams = [id];
+
+  try {
+    const res = await db.query(queryString, queryParams);
+    return res.rows[0];
+
+  } catch (err) {
+    console.error('query error', err.stack);
+  }
+}
+
+const getToDoItemById = async (id) => {
   const queryString = `
     SELECT user_id, input, category_id
     FROM todoitems
@@ -86,5 +103,6 @@ module.exports = {
   addToDoItems,
   checkAllEmails,
   getUserByEmail,
-  getToDoListById
+  getUserById,
+  getToDoItemById
 };
