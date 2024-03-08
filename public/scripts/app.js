@@ -8,6 +8,7 @@ const closeButton = document.querySelector("#dialog_cancel_btn");
 const confirmButton = document.querySelector("#dialog_confirm_btn");
 const itemsList = [];
 const toDoItems = {};
+let currCategory = -1;
 const url = "http://localhost:8080/";
 
 // "Show the dialog" button opens the dialog modally
@@ -21,6 +22,7 @@ showButton.addEventListener("click", () => {
 closeButton.addEventListener("click", () => {
     confirmButton.submissionType = 0
     dialog.close();
+    currCategory = -1;
 });
 
 // "Confirm" button closes the dialog
@@ -31,15 +33,18 @@ form.addEventListener("submit", (event) => {
     const dateInput = document.querySelector("#dialog_date_input").value;
     const durationInput = document.querySelector("#dialog_duration_input").value;
     const locationInput = document.querySelector("#dialog_location_input").value;
+    let categoryId = 4;
+    if(currCategory >= 0){
+        categoryId = currCategory + 1;
+    }
 
     if(confirmButton.submissionType == undefined || confirmButton.submissionType == 0){
         //If the dialog is for adding item
-        //TODO: Use the recognized type
         var data = {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: 4,
+            category_id: categoryId,
             description: descriptionInput,
             due_date: new Date(dateInput),
             completed: false
@@ -63,12 +68,11 @@ form.addEventListener("submit", (event) => {
         });
     }else{
         //If the dialog is for edit item
-        //TODO: Use the recognized type
         var data = {
             url: locationInput,
             duration: durationInput,
             title: titleInput,
-            category_id: 4,
+            category_id: categoryId,
             description: descriptionInput,
             due_date: new Date(dateInput),
             completed: false
@@ -93,6 +97,7 @@ form.addEventListener("submit", (event) => {
         confirmButton.submissionType = 0;
     }
     dialog.close();
+    currCategory = -1;
   });
 
 function initialize(){
@@ -288,6 +293,39 @@ function clickRemoveOnList(event){
 
     item.parentNode.removeChild(item);
     itemsList.slice(itemsList.indexOf(item), 1);
+}
+
+
+function clickWatch(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
+    currCategory = 0;
+}
+    
+function clickEat(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
+    currCategory = 1;
+}
+    
+function clickRead(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
+    currCategory = 2;
+}
+    
+function clickShop(event) {
+    for(const icon of document.querySelector(".dialog_icons").children){
+        icon.style.color = "black";
+    }
+    event.target.style.color = "#66A034";
+    currCategory = 3;
 }
 
 initialize();
