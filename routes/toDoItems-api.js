@@ -120,7 +120,7 @@ router.post('/:id', (req, res) => {
 //GET /api/todoitems/:id/delete
 //delete a toDoItem from user
 router.get('/:id/delete', (req, res) => {
-  const userId = req.session.userId;
+  const userId = req.session.userId || 3;
   console.log("delete", userId);
   // const deleteToDoItem = req.body;
   const deleteToDoItem = {
