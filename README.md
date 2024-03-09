@@ -21,7 +21,8 @@ The following steps are only for _one_ of the group members to perform.
   - database: `midterm`
 3. Install dependencies: `npm i`
 4. Fix to binaries for sass: `npm rebuild node-sass`
-5. Reset database: `npm run db:reset`
+5.  run `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keyfile.json"`. You can do this by running the following command in your terminal (replace /path/to/keyfile.json with the actual path to your JSON key file)
+6. Reset database: `npm run db:reset`
   - Check the db folder to see what gets created and seeded in the SDB
 7. Run the server: `npm run local`
   - Note: nodemon is used, so you should not have to restart your server
@@ -36,6 +37,7 @@ The following steps are only for _one_ of the group members to perform.
 - Use the `npm run db:reset` command each time there is a change to the database schema or seeds. 
   - It runs through each of the files, in order, and executes them against the database. 
   - Note: you will lose all newly created (test) data each time this is run, since the schema files will tend to `DROP` the tables and recreate them.
+
 
 ## Dependencies
 
@@ -53,3 +55,6 @@ The following steps are only for _one_ of the group members to perform.
 - Morgan: 1.9.1,
 - Pg: 8.5.0,
 - Sass: 1.35.1
+- google-auth-library: "9.6.3",
+- "@google-cloud/language": "^6.2.0"
+
