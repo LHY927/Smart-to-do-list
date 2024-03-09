@@ -56,5 +56,5 @@ The following steps are only for _one_ of the group members to perform.
 - Pg: 8.5.0,
 - Sass: 1.35.1
 - google-auth-library: "9.6.3",
-- "@google-cloud/language": "^6.2.0"
+- google-cloud/language": "^6.2.0"
 
