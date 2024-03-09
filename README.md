@@ -21,7 +21,7 @@ The following steps are only for _one_ of the group members to perform.
   - database: `midterm`
 3. Install dependencies: `npm i`
 4. Fix to binaries for sass: `npm rebuild node-sass`
-5.  run `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keyfile.json"`. You can do this by running the following command in your terminal (replace /path/to/keyfile.json with the actual path to your JSON key file)
+5.  run `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keyfile.json"`. You can do this by running the following command in your terminal (replace /path/to/keyfile.json with the "db/google_cloud_key.json" to your JSON key file)
 6. Reset database: `npm run db:reset`
   - Check the db folder to see what gets created and seeded in the SDB
 7. Run the server: `npm run local`
