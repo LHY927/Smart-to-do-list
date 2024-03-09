@@ -14,7 +14,7 @@ const { categorizeText } = require("../helper/google_cloud");
 //get all toDoItems from user
 router.get("/", (req, res) => {
   console.log("req.user_id", req.session.userId);
-  const userId = req.session.userId;
+  const userId = req.session.userId || 3;
 
   if (!userId) {
     return res.send({ error: "no users" });
@@ -132,8 +132,10 @@ router.post("/:id", (req, res) => {
 
 //GET /api/todoitems/:id/delete
 //delete a toDoItem from user
-router.get("/:id/delete", (req, res) => {
-  const userId = req.session.userId;
+
+router.get('/:id/delete', (req, res) => {
+  const userId = req.session.userId || 3;
+
   console.log("delete", userId);
   // const deleteToDoItem = req.body;
   const deleteToDoItem = {
