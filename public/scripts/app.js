@@ -258,6 +258,8 @@ function editItemTexts(item, type, name, description, date, duration, location){
 function clickCompleteOnList(event){
     event.target.parentNode.style.display = "none";
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
+    console.log(item.index);
+    const targetIndex = item.index;
 
     var data = toDoItems[item.index];
     data.completed = true;
@@ -278,6 +280,7 @@ function clickCompleteOnList(event){
     });
 
     const newItem = item.cloneNode(true);
+    newItem.index = targetIndex;
     completedItems.appendChild(newItem);
     item.parentNode.removeChild(item);
 }
@@ -286,6 +289,7 @@ function clickCompleteOnList(event){
 function clickRemoveOnList(event){
     console.log(event)
     const item = event.target.parentNode.parentNode.parentNode.parentNode;
+    console.log(item.index);
 
     // Make the AJAX POST request for edit existing item
     $.ajax(url + "api/todoitems/" + item.index + "/delete", {

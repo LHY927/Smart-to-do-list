@@ -78,7 +78,7 @@ main .item .item_content .item_countdown_past {
 main .item .item_control {
   display: flex;
   flex-flow: column;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .small_button {
